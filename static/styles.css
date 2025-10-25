@@ -1,0 +1,66 @@
+/* Простая аккуратная тема без сборщиков */
+:root{
+  --bg:#0f1218;
+  --panel:#161b22;
+  --border:#262c36;
+  --text:#e6edf3;
+  --muted:#9da7b3;
+  --brand:#7aa2f7;
+  --easy:#31c48d;
+  --medium:#f59e0b;
+  --hard:#ef4444;
+  --exam:#8b5cf6;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:1rem}
+.topbar{background:var(--panel);border-bottom:1px solid var(--border)}
+.topbar .container{display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:700}
+.nav-links a{margin-left:1rem}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1rem;margin:1rem 0}
+.footer{padding:2rem 1rem 3rem}
+.muted{color:var(--muted)}
+.list{list-style:none;padding:0;margin:0}
+.list li{padding:.5rem .25rem;border-bottom:1px dashed var(--border)}
+.list li:last-child{border-bottom:none}
+.bullets{list-style:disc;padding-left:1.25rem}
+.actions{margin-top:.75rem}
+.btn{display:inline-block;padding:.5rem .9rem;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--text)}
+.btn:hover{border-color:var(--brand)}
+.btn-ghost{padding:.35rem .6rem;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:10px}
+.btn-ghost:hover{border-color:var(--brand)}
+.badge{display:inline-block;padding:.1rem .45rem;border-radius:999px;font-size:.75rem;border:1px solid var(--border)}
+
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:999px;font-size:.75rem;margin-right:.35rem;border:1px solid var(--border)}
+.tag-easy{background:color-mix(in srgb, var(--easy) 20%, transparent); color:var(--text)}
+.tag-medium{background:color-mix(in srgb, var(--medium) 20%, transparent); color:var(--text)}
+.tag-hard{background:color-mix(in srgb, var(--hard) 20%, transparent); color:var(--text)}
+.tag-exam{background:color-mix(in srgb, var(--exam) 20%, transparent); color:var(--text)}
+
+.calendar-head{display:flex;align-items:center;justify-content:space-between}
+.calendar-legend{margin:.5rem 0}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
+.day-name{font-weight:600;color:var(--muted);text-align:center}
+.day{border:1px solid var(--border);border-radius:12px;min-height:100px;padding:.35rem;display:flex;flex-direction:column}
+.day .date-num{font-weight:600;color:var(--muted);margin-bottom:.25rem}
+.day.today{outline:2px solid var(--brand)}
+.event{margin:.15rem 0;padding:.1rem .35rem;border-radius:8px;border:1px solid var(--border);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.event.easy{background:color-mix(in srgb, var(--easy) 20%, transparent)}
+.event.medium{background:color-mix(in srgb, var(--medium) 20%, transparent)}
+.event.hard{background:color-mix(in srgb, var(--hard) 20%, transparent)}
+.event.exam{background:color-mix(in srgb, var(--exam) 20%, transparent)}
+.event .dot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.35rem;vertical-align:middle;border:1px solid var(--border)}
+.dot.easy{background:var(--easy)}
+.dot.medium{background:var(--medium)}
+.dot.hard{background:var(--hard)}
+.dot.exam{background:var(--exam)}
+
+@media (max-width:720px){
+  .calendar-grid{gap:.35rem}
+  .day{min-height:80px}
+}

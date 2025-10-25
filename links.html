@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Учебные дедлайны — Полезные ссылки</title>
+  <link rel="stylesheet" href="static/styles.css" />
+</head>
+<body data-page="links">
+  <header class="topbar">
+    <nav class="container">
+      <a class="brand" href="index.html">Учебные дедлайны</a>
+      <div class="nav-links">
+        <a href="calendar.html">Календарь</a>
+        <a href="links.html" aria-current="page">Полезные ссылки</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Ссылки по предметам</h2>
+
+      <div class="subject">
+        <h3>Физика</h3>
+        <ul class="list bullets">
+          <li><a href="https://example.com/physics-repo" target="_blank" rel="noopener">Репозиторий по физике</a> — материалы, задачи</li>
+          <li><a href="https://example.com/physics-lectures" target="_blank" rel="noopener">Лекции</a></li>
+        </ul>
+      </div>
+
+      <div class="subject">
+        <h3>Теория вероятностей</h3>
+        <ul class="list bullets">
+          <li><a href="https://example.com/prob-repo" target="_blank" rel="noopener">Репозиторий по теорверу</a></li>
+        </ul>
+      </div>
+
+      <div class="subject">
+        <h3>Проектная деятельность</h3>
+        <ul class="list bullets">
+          <li><a href="https://example.com/projects" target="_blank" rel="noopener">Общий репозиторий</a></li>
+        </ul>
+      </div>
+
+      <p class="muted">Редактируй этот список как обычный HTML или вынеси в отдельный <code>subjects.json</code> и подгружай через JS.</p>
+    </section>
+  </main>
+
+  <footer class="container footer muted">
+    Добавляй/удаляй ссылки прямо в <code>links.html</code>.
+  </footer>
+
+  <script src="static/app.js" defer></script>
+</body>
+</html>
