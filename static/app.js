@@ -99,62 +99,74 @@ function renderCalendar(items, today){
   // единый попап для событий
   let activePop = null;
   function hidePop(){
-    if (activePop?.el) activePop.el.remove();
+    if (activePop?.el){
+      activePop.el.remove();
+      window.removeEventListener("scroll", activePop.onScroll, true);
+      window.removeEventListener("resize", activePop.onScroll);
+      document.removeEventListener("click", activePop.onDocClick, true);
+      document.removeEventListener("keydown", activePop.onKey, true);
+    }
     activePop = null;
   }
+
   function showPopForRow(row, it){
     hidePop();
 
     const diff = DIFF_CLASS[it.difficulty] ?? "medium";
     const pop = document.createElement("div");
     pop.className = `event-pop ${diff}`;
-    const subj = escapeHTML(it.subject || "");
-    const title = escapeHTML(it.title || "");
+    const title = escapeHTML(it.title || "Без названия");
     pop.innerHTML = `
-      <div class="pop-title">${title || "Без названия"}</div>
+      <div class="pop-title">${title}</div>
       ${it.url ? `<a class="pop-link" href="${it.url}" target="_blank" rel="noopener">Открыть ссылку</a>` : `<span class="muted">ссылки нет</span>`}
     `;
     document.body.appendChild(pop);
 
-    // позиционируем около строки (над ней, если хватает места; иначе — ниже)
+    // Позиционируем СНИЗУ у строки (всегда снизу), с подстройкой по правому краю
     const gap = 12;
     const rect = row.getBoundingClientRect();
-    const vw = window.innerWidth, vh = window.innerHeight;
+    const vw = window.innerWidth;
 
-    // сначала зафиксируем ширину (чтобы корректно считать высоту)
     pop.style.left = "0px"; pop.style.top = "-9999px";
     const popW = Math.min(420, vw - 24);
     pop.style.maxWidth = popW + "px";
 
-    const ph = pop.offsetHeight, pw = pop.offsetWidth;
+    const pw = pop.offsetWidth;
     let left = rect.left + window.scrollX;
-    let top = rect.top + window.scrollY - ph - gap;
-    if (top < window.scrollY + 8) top = rect.bottom + window.scrollY + gap; // если не влезает сверху — показываем снизу
+    let top  = rect.bottom + window.scrollY + gap; // ← всегда снизу
     if (left + pw > window.scrollX + vw - 8) left = window.scrollX + vw - pw - 8;
 
     pop.style.left = left + "px";
-    pop.style.top  = top + "px";
+    pop.style.top  = top  + "px";
 
-    // обработчики скрытия
+    // НЕ исчезать при переходе курсора между строкой и попапом
+    let hideTimer = null;
+    const cancelHide   = () => { if (hideTimer){ clearTimeout(hideTimer); hideTimer=null; } };
+    const scheduleHide = () => { cancelHide(); hideTimer = setTimeout(() => hidePop(), 140); };
+
+    row.addEventListener("mouseenter", cancelHide);
+    row.addEventListener("mouseleave", (e) => {
+      if (!pop.contains(e.relatedTarget)) scheduleHide();
+    });
+    pop.addEventListener("mouseenter", cancelHide);
+    pop.addEventListener("mouseleave", (e) => {
+      if (!row.contains(e.relatedTarget)) scheduleHide();
+    });
+
+    // скрытие по клику вне / Esc / скроллу
     const onDocClick = (e) => {
       if (pop.contains(e.target) || row.contains(e.target)) return;
       hidePop();
-      document.removeEventListener("click", onDocClick, true);
     };
-    document.addEventListener("click", onDocClick, true);
-
-    pop.addEventListener("mouseleave", hidePop);
-    row.addEventListener("mouseleave", () => {
-      // если курсор не на попапе — скрыть (не ломаем клики по ссылке)
-      const onNextTick = () => { if (!pop.matches(":hover")) hidePop(); };
-      setTimeout(onNextTick, 10);
-    });
-
+    const onKey = (e) => { if (e.key === "Escape") hidePop(); };
     const onScroll = () => hidePop();
+
+    document.addEventListener("click", onDocClick, true);
+    document.addEventListener("keydown", onKey, true);
     window.addEventListener("scroll", onScroll, true);
     window.addEventListener("resize", onScroll);
 
-    activePop = { el: pop, row, onScroll };
+    activePop = { el: pop, onScroll, onDocClick, onKey };
   }
 
   let cur = startOfWeek(today);
@@ -205,12 +217,9 @@ function renderCalendar(items, today){
         row.title = it.title || "";
         row.innerHTML = `${escapeHTML(it.subject || "Задача")}`;
 
-        // hover + click показывают попап
+        // и по ховеру, и по клику показываем попап
         row.addEventListener("mouseenter", () => showPopForRow(row, it));
-        row.addEventListener("click", (e) => {
-          e.stopPropagation();
-          showPopForRow(row, it);
-        });
+        row.addEventListener("click", (e) => { e.stopPropagation(); showPopForRow(row, it); });
 
         list.appendChild(row);
       });
