@@ -75,7 +75,15 @@ function renderIndex(items, today){
     todayItems.forEach(it => {
       const diff = DIFF_CLASS[it.difficulty] ?? "medium";
       const li = document.createElement("li");
-      li.innerHTML = `<span class="badge tag-${diff}">${escapeHTML(it.subject)}</span> ${escapeHTML(abbreviateTitle(it.title))} — <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`;
+      li.innerHTML = `
+  <strong class="up-date">${fmtDate(it._date)}</strong>
+  <span class="up-main">
+    <span class="badge tag-${diff}">${escapeHTML(it.subject)}</span>
+    ${escapeHTML(abbreviateTitle(it.title))}
+    <span class="muted">(${it._daysLeft} дн.)</span>
+  </span>
+  <a class="up-link" href="${it.url}" target="_blank" rel="noopener">ссылка</a>
+`;
       todayList.appendChild(li);
     });
   }
