@@ -81,34 +81,32 @@ function monthLabel(year, month){
 }
 
 function renderCalendar(items, today){
-  const label  = document.getElementById("month-label");
-  const grid   = document.getElementById("calendar-grid");
+  const label   = document.getElementById("month-label");   // используем для недели
+  const grid    = document.getElementById("calendar-grid");
   const prevBtn = document.getElementById("prev-month");
   const nextBtn = document.getElementById("next-month");
 
-  // начало недели (Понедельник)
+  // начало недели (понедельник)
   function startOfWeek(d){
-    const tmp = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    const shift = (tmp.getDay() + 6) % 7; // 0=Пн
-    tmp.setDate(tmp.getDate() - shift);
-    return tmp;
+    const t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const shift = (t.getDay() + 6) % 7; // 0 = Пн
+    t.setDate(t.getDate() - shift);
+    return t;
   }
-
-  function shortMonth(m){ // для метки диапазона
+  function shortMonth(m){
     const mths = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
     return mths[m];
   }
 
-  // текущая неделя относительно today
   let cur = startOfWeek(today);
 
   function draw(){
     grid.innerHTML = "";
 
     const weekStart = new Date(cur);
-    const weekEnd = new Date(cur); weekEnd.setDate(weekEnd.getDate() + 6);
+    const weekEnd   = new Date(cur); weekEnd.setDate(weekEnd.getDate() + 6);
 
-    // метка: "12–18 окт 2025" (или "30 сен – 6 окт 2025", если месяц разный)
+    // Лейбл вроде "20–26 окт 2025"
     const sameMonth = weekStart.getMonth() === weekEnd.getMonth();
     const sameYear  = weekStart.getFullYear() === weekEnd.getFullYear();
     let text = `${weekStart.getDate()}–${weekEnd.getDate()} `;
@@ -121,47 +119,51 @@ function renderCalendar(items, today){
     }
     label.textContent = text;
 
-    // шапка дней недели
-    const dayNames = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
-    dayNames.forEach(n => {
-      const el = document.createElement("div");
-      el.className = "day-name";
-      el.textContent = n;
-      grid.appendChild(el);
-    });
+    // Контейнеры: заголовки дней + сетка дней
+    const header = document.createElement("div");
+    header.className = "week-header";
+    grid.appendChild(header);
 
-    // 7 ячеек на неделю
+    const week = document.createElement("div");
+    week.className = "week-grid";
+    grid.appendChild(week);
+
+    const dows = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+
     for (let i = 0; i < 7; i++) {
-      const cellDate = new Date(weekStart); cellDate.setDate(weekStart.getDate() + i);
+      const dayDate = new Date(weekStart); dayDate.setDate(weekStart.getDate() + i);
 
-      const cell = document.createElement("div");
-      cell.className = "day";
-      if (sameYMD(cellDate, today)) cell.classList.add("today");
+      // шапка колонки
+      const hc = document.createElement("div");
+      hc.className = "wh-cell";
+      hc.innerHTML = `<span class="wh-date">${dayDate.getDate()}</span>, <span class="wh-dow">${dows[i]}</span>`;
+      header.appendChild(hc);
 
-      const num = document.createElement("div");
-      num.className = "date-num";
-      num.textContent = cellDate.getDate();
-      cell.appendChild(num);
+      // сама колонка дня
+      const col = document.createElement("div");
+      col.className = "day-col";
+      if (sameYMD(dayDate, today)) col.classList.add("today");
 
-      const todays = items.filter(it => sameYMD(it._date, cellDate));
+      const body = document.createElement("div");
+      body.className = "day-body";
 
-      // список событий внизу ячейки, не растягивает высоту
       const list = document.createElement("div");
       list.className = "events";
-      cell.appendChild(list);
+      body.appendChild(list);
 
+      // события этого дня
+      const todays = items.filter(it => sameYMD(it._date, dayDate));
       todays.forEach(it => {
         const diff = DIFF_CLASS[it.difficulty] ?? "medium";
         const full = `${it.subject ? it.subject + ": " : ""}${it.title || ""}`.trim();
 
-        // показываем ТОЛЬКО предмет; при наведении всплывает крупный бейдж
+        // показываем ТОЛЬКО предмет; по ховеру — крупный бейдж
         const row = document.createElement("div");
         row.className = "ev-subj";
         row.setAttribute("data-tip", full);
-        row.title = full; // запасной тултип
+        row.title = full; // системный тултип на мобильных
         row.innerHTML = `<span class="dot ${diff}"></span>${it.subject || "Задача"}`;
 
-        // клик откроет ссылку (если есть)
         row.addEventListener("click", (e) => {
           e.stopPropagation();
           if (it.url) window.open(it.url, "_blank", "noopener");
@@ -170,16 +172,17 @@ function renderCalendar(items, today){
         list.appendChild(row);
       });
 
-      grid.appendChild(cell);
+      col.appendChild(body);
+      week.appendChild(col);
     }
   }
 
   draw();
-
-  // перелистывание по неделям
+  // листаем ровно по неделям
   prevBtn?.addEventListener("click", ()=>{ cur.setDate(cur.getDate() - 7); draw(); });
   nextBtn?.addEventListener("click", ()=>{ cur.setDate(cur.getDate() + 7); draw(); });
 }
+
 
 
 async function bootstrap(){

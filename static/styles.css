@@ -1,21 +1,14 @@
-/* Простая аккуратная тема без сборщиков */
+/* === БАЗА (цвета и каркас) === */
 :root{
-  --bg:#0f1218;
-  --panel:#161b22;
-  --border:#262c36;
-  --text:#e6edf3;
-  --muted:#9da7b3;
-  --brand:#7aa2f7;
-  --easy:#31c48d;
-  --medium:#f59e0b;
-  --hard:#ef4444;
-  --exam:#8b5cf6;
+  --bg:#0f1218; --panel:#161b22; --border:#262c36;
+  --text:#e6edf3; --muted:#9da7b3; --brand:#7aa2f7;
+  --easy:#31c48d; --medium:#f59e0b; --hard:#ef4444; --exam:#8b5cf6;
 }
 
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;}
-a{color:var(--brand);text-decoration:none}
-a:hover{text-decoration:underline}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica Neue,Arial,sans-serif;}
+a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:1rem}
 .topbar{background:var(--panel);border-bottom:1px solid var(--border)}
 .topbar .container{display:flex;align-items:center;justify-content:space-between}
@@ -26,146 +19,77 @@ a:hover{text-decoration:underline}
 .footer{padding:2rem 1rem 3rem}
 .muted{color:var(--muted)}
 .list{list-style:none;padding:0;margin:0}
-.list li{padding:.5rem .25rem;border-bottom:1px dashed var(--border)}
-.list li:last-child{border-bottom:none}
 .bullets{list-style:disc;padding-left:1.25rem}
-.actions{margin-top:.75rem}
-.btn{display:inline-block;padding:.5rem .9rem;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--text)}
-.btn:hover{border-color:var(--brand)}
 .btn-ghost{padding:.35rem .6rem;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:10px}
 .btn-ghost:hover{border-color:var(--brand)}
+
 .badge{display:inline-block;padding:.1rem .45rem;border-radius:999px;font-size:.75rem;border:1px solid var(--border)}
-
 .tag{display:inline-block;padding:.15rem .5rem;border-radius:999px;font-size:.75rem;margin-right:.35rem;border:1px solid var(--border)}
-.tag-easy{background:color-mix(in srgb, var(--easy) 20%, transparent); color:var(--text)}
-.tag-medium{background:color-mix(in srgb, var(--medium) 20%, transparent); color:var(--text)}
-.tag-hard{background:color-mix(in srgb, var(--hard) 20%, transparent); color:var(--text)}
-.tag-exam{background:color-mix(in srgb, var(--exam) 20%, transparent); color:var(--text)}
+.tag-easy{background:color-mix(in srgb, var(--easy) 20%, transparent)}
+.tag-medium{background:color-mix(in srgb, var(--medium) 20%, transparent)}
+.tag-hard{background:color-mix(in srgb, var(--hard) 20%, transparent)}
+.tag-exam{background:color-mix(in srgb, var(--exam) 20%, transparent)}
 
-.calendar-head{display:flex;align-items:center;justify-content:space-between}
-.calendar-legend{margin:.5rem 0}
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
-.day-name{font-weight:600;color:var(--muted);text-align:center}
-.day{border:1px solid var(--border);border-radius:12px;min-height:100px;padding:.35rem;display:flex;flex-direction:column}
-.day .date-num{font-weight:600;color:var(--muted);margin-bottom:.25rem}
-.day.today{outline:2px solid var(--brand)}
-.event{margin:.15rem 0;padding:.1rem .35rem;border-radius:8px;border:1px solid var(--border);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.event.easy{background:color-mix(in srgb, var(--easy) 20%, transparent)}
-.event.medium{background:color-mix(in srgb, var(--medium) 20%, transparent)}
-.event.hard{background:color-mix(in srgb, var(--hard) 20%, transparent)}
-.event.exam{background:color-mix(in srgb, var(--exam) 20%, transparent)}
-.event .dot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.35rem;vertical-align:middle;border:1px solid var(--border)}
-.dot.easy{background:var(--easy)}
-.dot.medium{background:var(--medium)}
-.dot.hard{background:var(--hard)}
-.dot.exam{background:var(--exam)}
+/* === Markdown-вид для страницы ссылок === */
+.markdown h2,.markdown h3,.markdown h4{
+  margin:1.2rem 0 .5rem; padding-bottom:.15rem; border-bottom:1px dashed var(--border);
+}
+.markdown hr{border:0;border-top:1px solid var(--border);margin:.9rem 0;opacity:.7}
+.markdown ul{margin:.4rem 0 .8rem 1.25rem}
+.markdown li{margin:.25rem 0}
 
-@media (max-width:720px){
-  .calendar-grid{gap:.35rem}
-  .day{min-height:80px}
+/* === КАЛЕНДАРЬ: только НЕДЕЛЯ === */
+/* верхняя панель с стрелками и диапазоном дат */
+.calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+
+/* контейнер календаря: даём горизонтальный скролл на узких экранах */
+.calendar-grid{display:block;overflow-x:auto;padding-bottom:.25rem}
+
+/* шапка дней недели: дата и ДOW */
+.week-header{
+  display:grid; grid-template-columns:repeat(7,minmax(140px,1fr));
+  gap:.6rem; min-width:980px;
+}
+.wh-cell{ text-align:center; color:var(--muted); font-weight:600; padding:.25rem 0 .4rem; }
+.wh-cell .wh-date{ color:var(--text); font-weight:700; margin-right:.25rem; }
+.wh-cell .wh-dow{ color:var(--muted); }
+
+/* сетка дней (7 колонок) */
+.week-grid{
+  display:grid; grid-template-columns:repeat(7,minmax(140px,1fr));
+  gap:.6rem; min-width:980px;
+}
+.day-col{
+  background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  min-height:360px; display:flex; flex-direction:column;
+}
+.day-col.today{ outline:2px solid var(--brand); }
+.day-body{ position:relative; flex:1; padding:.5rem; overflow:auto; }
+
+/* список событий в дне */
+.events{ display:flex; flex-direction:column; gap:.35rem; }
+
+/* строка-событие: показываем только предмет; крупный размер; троеточие при переполнении */
+.ev-subj{
+  position:relative; display:inline-flex; align-items:center; gap:.45rem;
+  max-width:100%; font-size:1rem; line-height:1.15;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:default;
 }
 
-/* markdown look */
-.markdown h2, .markdown h3, .markdown h4 {
-  margin: 1.2rem 0 .5rem;
-  padding-bottom: .15rem;
-  border-bottom: 1px dashed var(--border);
-}
-.markdown hr {
-  border: 0;
-  border-top: 1px solid var(--border);
-  margin: .9rem 0;
-  opacity: .7;
-}
-.markdown ul { margin: .4rem 0 .8rem 1.25rem; }
-.markdown li { margin: .25rem 0; }
-.markdown a:hover { text-decoration: underline; }
-.day { position: relative; }
-.events {
-  position: absolute; left: .35rem; right: .35rem; bottom: .35rem;
-  display: flex; gap: .25rem; flex-wrap: wrap;
-}
-.event-badge {
-  position: relative;
-  display: inline-flex; align-items: center; gap: .3rem;
-  padding: .12rem .42rem; border-radius: 999px;
-  font-size: .72rem; line-height: 1; cursor: default;
-  border: 1px solid var(--border);
-}
-.event-badge .dot {
-  width: .45rem; height: .45rem; border-radius: 50%;
-  border: 1px solid var(--border);
-}
-.event-badge.easy   { background: color-mix(in srgb, var(--easy)   20%, transparent); }
-.event-badge.medium { background: color-mix(in srgb, var(--medium) 20%, transparent); }
-.event-badge.hard   { background: color-mix(in srgb, var(--hard)   20%, transparent); }
-.event-badge.exam   { background: color-mix(in srgb, var(--exam)   20%, transparent); }
+/* цветная точка сложности */
+.ev-subj .dot{ width:.68rem; height:.68rem; border-radius:50%; border:1px solid var(--border); }
 .dot.easy{background:var(--easy)} .dot.medium{background:var(--medium)}
 .dot.hard{background:var(--hard)} .dot.exam{background:var(--exam)}
 
-/* всплывающая подсказка */
-.event-badge[data-tip]:hover::after{
-  content: attr(data-tip);
-  position: absolute; left: 0; bottom: 120%;
-  background: var(--panel); color: var(--text);
-  border: 1px solid var(--border); border-radius: .6rem;
-  padding: .4rem .6rem; white-space: nowrap; z-index: 10;
-  box-shadow: 0 10px 25px rgba(0,0,0,.35);
-}
-/* Неделя: 7 колонок, на мобиле — горизонтальная прокрутка */
-.calendar-grid{
-  display: grid;
-  grid-template-columns: repeat(7, minmax(120px, 1fr));
-  gap: .5rem;
-  overflow-x: auto;           /* если экран узкий — скроллится */
-  padding-bottom: .25rem;     /* чтобы не обрезало тени тултипов */
-  min-width: 720px;           /* держим читаемость на телефоне, даём горизонтальный скролл */
-}
-
-.day { position: relative; min-height: 140px; } /* фиксированная высота, ряды не тянутся */
-@media (max-width: 720px){
-  .day { min-height: 120px; }
-}
-
-/* список событий у нижней границы, вертикальная колонка */
-.events{
-  position: absolute; left: .35rem; right: .35rem; bottom: .35rem;
-  display: flex; flex-direction: column; gap: .25rem;
-}
-
-/* строка-событие: только предмет + точка сложности; одна строка, обрезка троеточием */
-.ev-subj{
-  position: relative;
-  display: inline-flex; align-items: center; gap: .35rem;
-  max-width: 100%;
-  font-size: .9rem;           /* крупнее, чем раньше */
-  line-height: 1.1;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  cursor: default;
-}
-
-.ev-subj .dot{               /* увеличим маркер */
-  width: .6rem; height: .6rem; border-radius: 50%;
-  border: 1px solid var(--border);
-}
-.dot.easy{background:var(--easy)}
-.dot.medium{background:var(--medium)}
-.dot.hard{background:var(--hard)}
-.dot.exam{background:var(--exam)}
-
-/* крупный бейдж-подсказка при наведении */
+/* крупный бейдж-подсказка (полное название) */
 .ev-subj[data-tip]:hover::after{
-  content: attr(data-tip);
-  position: absolute; left: 0; bottom: 125%;
-  background: var(--panel); color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: .8rem;
-  padding: .55rem .75rem;             /* чуть больше */
-  font-size: .95rem;                  /* крупнее бейдж */
-  white-space: nowrap; z-index: 20;
-  box-shadow: 0 12px 28px rgba(0,0,0,.4);
+  content:attr(data-tip); position:absolute; left:0; bottom:125%;
+  background:var(--panel); color:var(--text); border:1px solid var(--border);
+  border-radius:.9rem; padding:.6rem .8rem; font-size:1rem; white-space:nowrap; z-index:20;
+  box-shadow:0 12px 28px rgba(0,0,0,.4);
 }
 
-
-
-
+/* мобилки */
+@media (max-width:720px){
+  .day-col{ min-height:300px; }
+}
