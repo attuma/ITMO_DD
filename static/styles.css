@@ -5,6 +5,10 @@
   --easy:#31c48d; --medium:#f59e0b; --hard:#ef4444; --exam:#8b5cf6;
 }
 
+:root{ --day-h: 300px; }
+@media (max-height: 820px){ :root{ --day-h: 260px; } }
+@media (max-height: 680px){ :root{ --day-h: 220px; } }
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
   font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica Neue,Arial,sans-serif;}
@@ -42,27 +46,44 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 /* верхняя панель с стрелками и диапазоном дат */
 .calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
 
-/* контейнер календаря: даём горизонтальный скролл на узких экранах */
-.calendar-grid{display:block;overflow-x:auto;padding-bottom:.25rem}
-
-/* шапка дней недели: дата и ДOW */
-.week-header{
-  display:grid; grid-template-columns:repeat(7,minmax(140px,1fr));
-  gap:.6rem; min-width:980px;
+/* контейнер календаря: без горизонтального скролла на десктопе */
+.calendar-grid{
+  display:block;
+  overflow-x:visible;
+  padding-bottom:.25rem;
 }
+
+
+/* шапка дней недели: ровно 7 равных колонок */
+.week-header{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:.6rem;
+  min-width:0; /* важно, чтобы ничего не растягивало контейнер */
+}
+
 .wh-cell{ text-align:center; color:var(--muted); font-weight:600; padding:.25rem 0 .4rem; }
 .wh-cell .wh-date{ color:var(--text); font-weight:700; margin-right:.25rem; }
 .wh-cell .wh-dow{ color:var(--muted); }
 
 /* сетка дней (7 колонок) */
+/* сетка дней: тоже 7 равных колонок */
 .week-grid{
-  display:grid; grid-template-columns:repeat(7,minmax(140px,1fr));
-  gap:.6rem; min-width:980px;
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:.6rem;
+  min-width:0;
 }
+
 .day-col{
-  background:var(--panel); border:1px solid var(--border); border-radius:12px;
-  min-height:360px; display:flex; flex-direction:column;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  height: var(--day-h);  /* фиксируем высоту через переменную */
+  min-height: 0;         /* убираем старый min-height */
+  display:flex; flex-direction:column;
 }
+
 .day-col.today{ outline:2px solid var(--brand); }
 .day-body{ position:relative; flex:1; padding:.5rem; overflow:auto; }
 
@@ -88,67 +109,14 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   border-radius:.9rem; padding:.6rem .8rem; font-size:1rem; white-space:nowrap; z-index:20;
   box-shadow:0 12px 28px rgba(0,0,0,.4);
 }
-/* --- компактная неделя без горизонтального скролла на десктопе --- */
-.calendar-grid{ display:block; overflow-x:visible; padding-bottom:.25rem; }
 
-/* заголовки дней и колонки — ровно 7 равных долей */
-.week-header, .week-grid{
-  display:grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap:.6rem;
-  min-width: 0;   /* важно, чтобы ничего не расширяло контейнер */
-}
 
-/* контроль высоты столбца недели через переменную */
-:root{ --day-h: 300px; }              /* базовая высота */
-@media (max-height: 820px){ :root{ --day-h: 260px; } }
-@media (max-height: 680px){ :root{ --day-h: 220px; } }
-
-.day-col{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  height: var(--day-h);               /* фиксируем высоту */
-  min-height: 0;                      /* отменяем прежний min-height */
-  display:flex; flex-direction:column;
-}
-.day-col.today{ outline:2px solid var(--brand); }
-
-.day-body{
-  position:relative;
-  flex:1;
-  padding:.5rem;
-  overflow:auto;                      /* если задач много — скролл ВНУТРИ дня */
-}
-
-/* список событий и строки — как раньше */
-.events{ display:flex; flex-direction:column; gap:.35rem; }
-.ev-subj{
-  position:relative; display:inline-flex; align-items:center; gap:.45rem;
-  max-width:100%; font-size:1rem; line-height:1.15;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:default;
-}
-.ev-subj .dot{ width:.68rem; height:.68rem; border-radius:50%; border:1px solid var(--border); }
-.dot.easy{background:var(--easy)} .dot.medium{background:var(--medium)}
-.dot.hard{background:var(--hard)} .dot.exam{background:var(--exam)}
-.ev-subj[data-tip]:hover::after{
-  content:attr(data-tip); position:absolute; left:0; bottom:125%;
-  background:var(--panel); color:var(--text); border:1px solid var(--border);
-  border-radius:.9rem; padding:.6rem .8rem; font-size:1rem; white-space:nowrap; z-index:20;
-  box-shadow:0 12px 28px rgba(0,0,0,.4);
-}
-
-/* на очень узких экранах разрешаем горизонтальный скролл недели */
+/* мобилки */
 @media (max-width: 820px){
   .calendar-grid{ overflow-x:auto; }
   .week-header, .week-grid{
     grid-template-columns: repeat(7, minmax(120px, 1fr));
-    min-width: 840px; /* чтобы не мельчилось; скролл горизонтальный появится тут */
+    min-width: 840px;   /* неделя прокручивается по горизонтали, ничего не сжимается в пыль */
   }
-}
-
-
-/* мобилки */
-@media (max-width:720px){
-  .day-col{ min-height:300px; }
+  .day-col{ height: 260px; }
 }
