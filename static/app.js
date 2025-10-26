@@ -96,11 +96,16 @@ function renderCalendar(items, today){
 
   // "27 октября – 2 ноября" (+ годы, если разные)
   const MONTHS_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-  function formatWeekRange(a,b){
-    let left  = `${a.getDate()} ${MONTHS_GEN[a.getMonth()]}${a.getFullYear()!==b.getFullYear() ? " " + a.getFullYear() : ""}`;
-    let right = `${b.getDate()} ${MONTHS_GEN[b.getMonth()]} ${b.getFullYear()}`;
-    return `${left} – ${right}`;
-  }
+
+function formatWeekRange(a, b){
+  const left  = `${a.getDate()} ${MONTHS_GEN[a.getMonth()]}`;
+  const right = `${b.getDate()} ${MONTHS_GEN[b.getMonth()]} ${b.getFullYear()}`;
+  // если годы разные, явно допишем год слева тоже
+  return a.getFullYear() !== b.getFullYear()
+    ? `${left} ${a.getFullYear()} - ${right}`
+    : `${left} - ${right}`;
+}
+
 
   let cur = startOfWeek(today);
 
@@ -153,7 +158,7 @@ function renderCalendar(items, today){
         row.className = `ev-subj ${diff}`;           // ← diff нужен для цветной линии
         row.setAttribute("data-tip", it.title || "");
         row.title = it.title || "";
-        row.innerHTML = `<span class="dot ${diff}"></span>${it.subject || "Задача"}`;
+        row.innerHTML = `${it.subject || "Задача"}`;
 
         row.addEventListener("click", (e) => {
           e.stopPropagation();
