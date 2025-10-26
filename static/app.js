@@ -2,10 +2,10 @@
 const DATA_URL = "data/deadlines.json";
 
 const DIFF_CLASS = {
-  "easy": "easy",
-  "medium": "medium",
-  "hard": "hard",
-  "exam": "exam"
+  easy: "easy",
+  medium: "medium",
+  hard: "hard",
+  exam: "exam",
 };
 
 function fmtDate(d){
@@ -15,32 +15,35 @@ function fmtDate(d){
   return `${dd}.${mm}.${yyyy}`;
 }
 function parseISO(dateStr){
-  // Безопасный парсинг 'YYYY-MM-DD' как местной даты
+  // безопасный парсинг 'YYYY-MM-DD' как локальной даты
   const [y,m,d] = dateStr.split("-").map(Number);
   return new Date(y, m-1, d);
 }
 function sameYMD(a,b){
-  return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  return a.getFullYear()===b.getFullYear()
+      && a.getMonth()===b.getMonth()
+      && a.getDate()===b.getDate();
 }
-function daysLeft(from, to){
-  const ms = parseISO(to) - from;
+function daysLeft(from, toISO){
+  const ms = parseISO(toISO) - from;
   return Math.ceil(ms / (1000*60*60*24));
 }
 
 async function loadDeadlines(){
-  const res = await fetch(DATA_URL, {cache: "no-store"});
+  const res = await fetch(DATA_URL, { cache: "no-store" });
   const raw = await res.json();
   const today = new Date();
-  // нормализуем
+
   const items = raw.map(x => {
     const d = parseISO(x.date);
     return {
       ...x,
       _date: d,
-      _daysLeft: daysLeft(new Date(today.getFullYear(), today.getMonth(), today.getDate()), x.date)
+      _daysLeft: daysLeft(new Date(today.getFullYear(), today.getMonth(), today.getDate()), x.date),
     };
   }).sort((a,b)=> a._date - b._date);
-  return {items, today};
+
+  return { items, today };
 }
 
 function renderIndex(items, today){
@@ -50,11 +53,11 @@ function renderIndex(items, today){
   const upList = document.getElementById("upcoming-list");
   const upEmpty = document.getElementById("upcoming-empty");
 
-  if(todayDateEl) todayDateEl.textContent = `Сегодня: ${fmtDate(today)}`;
+  if (todayDateEl) todayDateEl.textContent = `Сегодня: ${fmtDate(today)}`;
 
-  if(todayList){
+  if (todayList){
     const todayItems = items.filter(it => sameYMD(it._date, today));
-    if(todayItems.length===0){ todayEmpty.style.display="block"; }
+    if (todayItems.length === 0) { todayEmpty.style.display = "block"; }
     todayItems.forEach(it => {
       const li = document.createElement("li");
       const diff = DIFF_CLASS[it.difficulty] ?? "medium";
@@ -63,21 +66,16 @@ function renderIndex(items, today){
     });
   }
 
-  if(upList){
+  if (upList){
     const future = items.filter(it => it._date >= new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-    if(future.length===0){ upEmpty.style.display="block"; }
+    if (future.length === 0) { upEmpty.style.display = "block"; }
     future.slice(0,7).forEach(it => {
       const diff = DIFF_CLASS[it.difficulty] ?? "medium";
       const li = document.createElement("li");
-      li.innerHTML = `<span class="dot ${diff}"></span><strong>${fmtDate(it._date)}</strong> — <span class="badge tag-${diff}">${it.subject}</span> ${it.title} <span class="muted">(${it._daysLeft} дн.)</span> · <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`;
+      li.innerHTML = `<strong>${fmtDate(it._date)}</strong> — <span class="badge tag-${diff}">${it.subject}</span> ${it.title} <span class="muted">(${it._daysLeft} дн.)</span> · <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`;
       upList.appendChild(li);
     });
   }
-}
-
-function monthLabel(year, month){
-  const months = ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
-  return `${months[month]} ${year}`;
 }
 
 function renderCalendar(items, today){
@@ -94,18 +92,15 @@ function renderCalendar(items, today){
     return t;
   }
 
-  // "27 октября – 2 ноября" (+ годы, если разные)
+  // "20 октября - 26 октября 2025" (обычный дефис; если годы разные — слева тоже год)
   const MONTHS_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-
-function formatWeekRange(a, b){
-  const left  = `${a.getDate()} ${MONTHS_GEN[a.getMonth()]}`;
-  const right = `${b.getDate()} ${MONTHS_GEN[b.getMonth()]} ${b.getFullYear()}`;
-  // если годы разные, явно допишем год слева тоже
-  return a.getFullYear() !== b.getFullYear()
-    ? `${left} ${a.getFullYear()} - ${right}`
-    : `${left} - ${right}`;
-}
-
+  function formatWeekRange(a, b){
+    const left  = `${a.getDate()} ${MONTHS_GEN[a.getMonth()]}`;
+    const right = `${b.getDate()} ${MONTHS_GEN[b.getMonth()]} ${b.getFullYear()}`;
+    return a.getFullYear() !== b.getFullYear()
+      ? `${left} ${a.getFullYear()} - ${right}`
+      : `${left} - ${right}`;
+  }
 
   let cur = startOfWeek(today);
 
@@ -153,12 +148,12 @@ function formatWeekRange(a, b){
       todays.forEach(it => {
         const diff = DIFF_CLASS[it.difficulty] ?? "medium";
 
-        // показываем только предмет, тултип = ТОЛЬКО название работы
+        // показываем только предмет; тултип = ТОЛЬКО название работы
         const row = document.createElement("div");
-        row.className = `ev-subj ${diff}`;           // ← diff нужен для цветной линии
+        row.className = `ev-subj ${diff}`;           // цвет линии слева
         row.setAttribute("data-tip", it.title || "");
         row.title = it.title || "";
-        row.innerHTML = `${it.subject || "Задача"}`;
+        row.innerHTML = `${it.subject || "Задача"}`;  // без кружка
 
         row.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -178,14 +173,12 @@ function formatWeekRange(a, b){
   nextBtn?.addEventListener("click", ()=>{ cur.setDate(cur.getDate() + 7); draw(); });
 }
 
-
 async function bootstrap(){
   const page = document.body.getAttribute("data-page") || "index";
   try{
     const {items, today} = await loadDeadlines();
     if(page==="index") renderIndex(items, today);
     if(page==="calendar") renderCalendar(items, today);
-    // links.html не требует JS, но оставим инициализацию общую
   }catch(e){
     console.error("Не удалось загрузить данные:", e);
   }
