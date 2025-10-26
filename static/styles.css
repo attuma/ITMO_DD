@@ -69,14 +69,12 @@ a:hover{text-decoration:underline}
 .day-col.today{ outline:2px solid var(--brand); }
 .day-body{ position:relative; flex:1; padding:.5rem; overflow:auto; }
 
-.events{ display:flex; flex-direction:column; gap:.35rem; }
+.events{ display:flex; flex-direction:column; gap:.45rem; }
 
-/* строка события: только предмет + цветная полоса слева */
+/* событие: колонка из трёх строк (предмет, сокращённое название, ссылка) + цветная полоса слева */
 .ev-subj{
-  position:relative; display:inline-flex; align-items:center;
-  max-width:100%; font-size:1rem; line-height:1.15;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:default;
-  padding-left:.75rem;
+  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:.2rem;
+  max-width:100%; cursor:default; padding-left:.75rem;
 }
 .ev-subj::before{
   content:""; position:absolute; left:0; top:50%; transform:translateY(-50%);
@@ -86,28 +84,12 @@ a:hover{text-decoration:underline}
 .ev-subj.medium::before{ background:var(--medium); }
 .ev-subj.hard::before{   background:var(--hard); }
 .ev-subj.exam::before{   background:var(--exam); }
-.ev-subj .dot{ display:none !important; }              /* старую точку прячем */
-.ev-subj[data-tip]:hover::after,                       /* гасим прежний CSS-тултип */
-.ev-subj[data-tip]:hover::before{ content:none !important; }
 
-/* Попап-сообщение (большой бейдж) — перекрывает соседние дни */
-.event-pop{
-  position:fixed; z-index:1000;
-  background:var(--panel); color:var(--text);
-  border:1px solid var(--border); border-radius:14px;
-  padding:.9rem 1.1rem; box-shadow:0 18px 40px rgba(0,0,0,.5);
-  max-width:420px; pointer-events:auto;
-}
-.event-pop::before{
-  content:""; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:14px 0 0 14px; background:var(--muted);
-}
-.event-pop.easy::before{   background:var(--easy); }
-.event-pop.medium::before{ background:var(--medium); }
-.event-pop.hard::before{   background:var(--hard); }
-.event-pop.exam::before{   background:var(--exam); }
-
-.pop-title{ font-weight:700; font-size:1.05rem; margin:.05rem 0 .45rem; }
-.pop-link{ display:inline-block; margin-top:.1rem; border:1px solid var(--border); padding:.4rem .7rem; border-radius:10px; }
+.ev-name{ font-size:1rem; line-height:1.15; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ev-desc{ font-size:.9rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ev-link{ font-size:.85rem; text-decoration:none; border-bottom:1px dashed var(--brand); }
+.ev-link:hover{ border-bottom-style:solid; }
+.ev-link.disabled{ color:var(--muted); border-bottom:1px dashed transparent; pointer-events:none; }
 
 /* мобилки: горизонтальный скролл недели */
 @media (max-width: 820px){
