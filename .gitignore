@@ -1,0 +1,55 @@
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+/.idea/
+.vscode/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# venv
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# build/cache
+.build/
+dist/
+build/
+.eggs/
+*.egg-info/
+.wheels/
+.coverage*
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.ipynb_checkpoints/
+
+# dotenv/keys
+.env
+.env.*
+*.secret
+*.key
+
+# JS (на будущее)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# misc
+*.bak
+*.tmp

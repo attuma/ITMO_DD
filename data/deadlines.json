@@ -1,34 +1,26 @@
 [
   {
-    "id": "phys-kr-2025-10-27",
-    "date": "2025-10-27",
-    "title": "Контрольная работа",
-    "subject": "Физика",
-    "difficulty": "exam",
-    "url": "https://example.com/physics-kr"
+    "date":"2025-10-28",
+    "subject":"Физика",
+    "title":"Lab2",
+    "url":""
   },
   {
-    "id": "prob-lab3-2025-11-05",
-    "date": "2025-11-05",
-    "title": "Лаба №3",
-    "subject": "Теория вероятностей",
-    "difficulty": "hard",
-    "url": "https://example.com/prob-lab3"
+    "date":"2025-11-03",
+    "subject":"Теорвер",
+    "title":"РГР",
+    "url":""
   },
   {
-    "id": "proj-demo-2025-11-12",
-    "date": "2025-11-12",
-    "title": "Демо проекта",
-    "subject": "Проекты",
-    "difficulty": "medium",
-    "url": "https://example.com/project-demo"
+    "date":"2025-11-07",
+    "subject":"Матан",
+    "title":"Академ",
+    "url":""
   },
   {
-    "id": "phys-home-2025-11-20",
-    "date": "2025-11-20",
-    "title": "Домашка №4",
-    "subject": "Физика",
-    "difficulty": "easy",
-    "url": "https://example.com/phys-hw4"
+    "date":"2025-11-11",
+    "subject":"Физика",
+    "title":"Рубежка",
+    "url":""
   }
 ]
