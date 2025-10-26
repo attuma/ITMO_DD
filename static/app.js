@@ -1,12 +1,7 @@
 // Лёгкая логика без сборки. Всё работает на GitHub/Cloudflare Pages.
 const DATA_URL = "data/deadlines.json";
 
-const DIFF_CLASS = {
-  easy: "easy",
-  medium: "medium",
-  hard: "hard",
-  exam: "exam",
-};
+const DIFF_CLASS = { easy: "easy", medium: "medium", hard: "hard", exam: "exam" };
 
 function fmtDate(d){
   const dd = String(d.getDate()).padStart(2,'0');
@@ -15,18 +10,18 @@ function fmtDate(d){
   return `${dd}.${mm}.${yyyy}`;
 }
 function parseISO(dateStr){
-  // безопасный парсинг 'YYYY-MM-DD' как локальной даты
   const [y,m,d] = dateStr.split("-").map(Number);
   return new Date(y, m-1, d);
 }
 function sameYMD(a,b){
-  return a.getFullYear()===b.getFullYear()
-      && a.getMonth()===b.getMonth()
-      && a.getDate()===b.getDate();
+  return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
 }
 function daysLeft(from, toISO){
   const ms = parseISO(toISO) - from;
   return Math.ceil(ms / (1000*60*60*24));
+}
+function escapeHTML(s=""){
+  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 async function loadDeadlines(){
@@ -61,7 +56,7 @@ function renderIndex(items, today){
     todayItems.forEach(it => {
       const li = document.createElement("li");
       const diff = DIFF_CLASS[it.difficulty] ?? "medium";
-      li.innerHTML = `<span class="badge tag-${diff}">${it.subject}</span> ${it.title} — <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`;
+      li.innerHTML = `<span class="badge tag-${diff}">${escapeHTML(it.subject)}</span> ${escapeHTML(it.title)} — <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`;
       todayList.appendChild(li);
     });
   }
@@ -72,19 +67,19 @@ function renderIndex(items, today){
     future.slice(0,7).forEach(it => {
       const diff = DIFF_CLASS[it.difficulty] ?? "medium";
       const li = document.createElement("li");
-      li.innerHTML = `<strong>${fmtDate(it._date)}</strong> — <span class="badge tag-${diff}">${it.subject}</span> ${it.title} <span class="muted">(${it._daysLeft} дн.)</span> · <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`;
+      li.innerHTML = `<strong>${fmtDate(it._date)}</strong> — <span class="badge tag-${diff}">${escapeHTML(it.subject)}</span> ${escapeHTML(it.title)} <span class="muted">(${it._daysLeft} дн.)</span> · <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`;
       upList.appendChild(li);
     });
   }
 }
 
+/* ---------- НЕДЕЛЬНЫЙ КАЛЕНДАРЬ ---------- */
 function renderCalendar(items, today){
   const label   = document.getElementById("month-label");
   const grid    = document.getElementById("calendar-grid");
   const prevBtn = document.getElementById("prev-month");
   const nextBtn = document.getElementById("next-month");
 
-  // начало недели (понедельник)
   function startOfWeek(d){
     const t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     const shift = (t.getDay() + 6) % 7; // 0 = Пн
@@ -92,7 +87,6 @@ function renderCalendar(items, today){
     return t;
   }
 
-  // "20 октября - 26 октября 2025" (обычный дефис; если годы разные — слева тоже год)
   const MONTHS_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
   function formatWeekRange(a, b){
     const left  = `${a.getDate()} ${MONTHS_GEN[a.getMonth()]}`;
@@ -102,16 +96,77 @@ function renderCalendar(items, today){
       : `${left} - ${right}`;
   }
 
+  // единый попап для событий
+  let activePop = null;
+  function hidePop(){
+    if (activePop?.el) activePop.el.remove();
+    activePop = null;
+  }
+  function showPopForRow(row, it){
+    hidePop();
+
+    const diff = DIFF_CLASS[it.difficulty] ?? "medium";
+    const pop = document.createElement("div");
+    pop.className = `event-pop ${diff}`;
+    const subj = escapeHTML(it.subject || "");
+    const title = escapeHTML(it.title || "");
+    pop.innerHTML = `
+      <div class="pop-title">${title || "Без названия"}</div>
+      ${it.url ? `<a class="pop-link" href="${it.url}" target="_blank" rel="noopener">Открыть ссылку</a>` : `<span class="muted">ссылки нет</span>`}
+    `;
+    document.body.appendChild(pop);
+
+    // позиционируем около строки (над ней, если хватает места; иначе — ниже)
+    const gap = 12;
+    const rect = row.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+
+    // сначала зафиксируем ширину (чтобы корректно считать высоту)
+    pop.style.left = "0px"; pop.style.top = "-9999px";
+    const popW = Math.min(420, vw - 24);
+    pop.style.maxWidth = popW + "px";
+
+    const ph = pop.offsetHeight, pw = pop.offsetWidth;
+    let left = rect.left + window.scrollX;
+    let top = rect.top + window.scrollY - ph - gap;
+    if (top < window.scrollY + 8) top = rect.bottom + window.scrollY + gap; // если не влезает сверху — показываем снизу
+    if (left + pw > window.scrollX + vw - 8) left = window.scrollX + vw - pw - 8;
+
+    pop.style.left = left + "px";
+    pop.style.top  = top + "px";
+
+    // обработчики скрытия
+    const onDocClick = (e) => {
+      if (pop.contains(e.target) || row.contains(e.target)) return;
+      hidePop();
+      document.removeEventListener("click", onDocClick, true);
+    };
+    document.addEventListener("click", onDocClick, true);
+
+    pop.addEventListener("mouseleave", hidePop);
+    row.addEventListener("mouseleave", () => {
+      // если курсор не на попапе — скрыть (не ломаем клики по ссылке)
+      const onNextTick = () => { if (!pop.matches(":hover")) hidePop(); };
+      setTimeout(onNextTick, 10);
+    });
+
+    const onScroll = () => hidePop();
+    window.addEventListener("scroll", onScroll, true);
+    window.addEventListener("resize", onScroll);
+
+    activePop = { el: pop, row, onScroll };
+  }
+
   let cur = startOfWeek(today);
 
   function draw(){
+    hidePop();
     grid.innerHTML = "";
 
     const weekStart = new Date(cur);
     const weekEnd   = new Date(cur); weekEnd.setDate(weekEnd.getDate() + 6);
     label.textContent = formatWeekRange(weekStart, weekEnd);
 
-    // шапка дней
     const header = document.createElement("div");
     header.className = "week-header";
     grid.appendChild(header);
@@ -125,13 +180,11 @@ function renderCalendar(items, today){
     for (let i = 0; i < 7; i++) {
       const dayDate = new Date(weekStart); dayDate.setDate(weekStart.getDate() + i);
 
-      // заголовок колонки
       const hc = document.createElement("div");
       hc.className = "wh-cell";
       hc.innerHTML = `<span class="wh-date">${dayDate.getDate()}</span><span class="wh-dow">, ${dows[i]}</span>`;
       header.appendChild(hc);
 
-      // колонка дня
       const col = document.createElement("div");
       col.className = "day-col";
       if (sameYMD(dayDate, today)) col.classList.add("today");
@@ -143,21 +196,20 @@ function renderCalendar(items, today){
       list.className = "events";
       body.appendChild(list);
 
-      // события дня
       const todays = items.filter(it => sameYMD(it._date, dayDate));
       todays.forEach(it => {
         const diff = DIFF_CLASS[it.difficulty] ?? "medium";
-
-        // показываем только предмет; тултип = ТОЛЬКО название работы
         const row = document.createElement("div");
-        row.className = `ev-subj ${diff}`;           // цвет линии слева
+        row.className = `ev-subj ${diff}`;
         row.setAttribute("data-tip", it.title || "");
         row.title = it.title || "";
-        row.innerHTML = `${it.subject || "Задача"}`;  // без кружка
+        row.innerHTML = `${escapeHTML(it.subject || "Задача")}`;
 
+        // hover + click показывают попап
+        row.addEventListener("mouseenter", () => showPopForRow(row, it));
         row.addEventListener("click", (e) => {
           e.stopPropagation();
-          if (it.url) window.open(it.url, "_blank", "noopener");
+          showPopForRow(row, it);
         });
 
         list.appendChild(row);
@@ -173,6 +225,7 @@ function renderCalendar(items, today){
   nextBtn?.addEventListener("click", ()=>{ cur.setDate(cur.getDate() + 7); draw(); });
 }
 
+/* ---------- BOOT ---------- */
 async function bootstrap(){
   const page = document.body.getAttribute("data-page") || "index";
   try{
