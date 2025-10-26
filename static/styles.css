@@ -42,9 +42,14 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 .markdown ul{margin:.4rem 0 .8rem 1.25rem}
 .markdown li{margin:.25rem 0}
 
-/* === КАЛЕНДАРЬ: только НЕДЕЛЯ === */
+/* === КАЛЕНДАРЬ === */
 /* верхняя панель с стрелками и диапазоном дат */
-.calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.calendar-head h2#month-label{
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: .2px;
+}
 
 /* контейнер календаря: без горизонтального скролла на десктопе */
 .calendar-grid{
@@ -67,7 +72,6 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
 .wh-cell .wh-dow{ color:var(--muted); }
 
 /* сетка дней (7 колонок) */
-/* сетка дней: тоже 7 равных колонок */
 .week-grid{
   display:grid;
   grid-template-columns: repeat(7, 1fr);
@@ -108,14 +112,6 @@ a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
   background:var(--panel); color:var(--text); border:1px solid var(--border);
   border-radius:.9rem; padding:.6rem .8rem; font-size:1rem; white-space:nowrap; z-index:20;
   box-shadow:0 12px 28px rgba(0,0,0,.4);
-}
-
-/* заголовок недели — как в примере */
-.calendar-head h2#month-label{
-  margin: 0;
-  font-weight: 800;
-  font-size: 1.6rem;
-  letter-spacing: .2px;
 }
 
 /* цветная вертикальная линия СПРАВА у события */
