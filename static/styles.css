@@ -64,3 +64,20 @@ a:hover{text-decoration:underline}
   .calendar-grid{gap:.35rem}
   .day{min-height:80px}
 }
+
+/* markdown look */
+.markdown h2, .markdown h3, .markdown h4 {
+  margin: 1.2rem 0 .5rem;
+  padding-bottom: .15rem;
+  border-bottom: 1px dashed var(--border);
+}
+.markdown hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: .9rem 0;
+  opacity: .7;
+}
+.markdown ul { margin: .4rem 0 .8rem 1.25rem; }
+.markdown li { margin: .25rem 0; }
+.markdown a:hover { text-decoration: underline; }
+
