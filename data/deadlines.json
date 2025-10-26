@@ -1,26 +1,30 @@
 [
   {
-    "date":"2025-10-28",
     "subject":"Физика",
     "title":"Lab2",
+    "date":"2025-10-28",
+    "difficulty":"medium",
     "url":""
   },
   {
-    "date":"2025-11-03",
     "subject":"Теорвер",
     "title":"РГР",
+    "date":"2025-11-03",
+    "difficulty":"easy",
     "url":""
   },
   {
-    "date":"2025-11-07",
     "subject":"Матан",
     "title":"Академ",
+    "date":"2025-11-07",
+    "difficulty":"easy",
     "url":""
   },
   {
-    "date":"2025-11-11",
     "subject":"Физика",
     "title":"Рубежка",
+    "date":"2025-11-11",
+    "difficulty":"exam",
     "url":""
   }
 ]
