@@ -86,13 +86,42 @@ function renderCalendar(items, today){
   const prevBtn = document.getElementById("prev-month");
   const nextBtn = document.getElementById("next-month");
 
-  let cur = new Date(today.getFullYear(), today.getMonth(), 1);
+  // начало недели (Понедельник)
+  function startOfWeek(d){
+    const tmp = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const shift = (tmp.getDay() + 6) % 7; // 0=Пн
+    tmp.setDate(tmp.getDate() - shift);
+    return tmp;
+  }
+
+  function shortMonth(m){ // для метки диапазона
+    const mths = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+    return mths[m];
+  }
+
+  // текущая неделя относительно today
+  let cur = startOfWeek(today);
 
   function draw(){
     grid.innerHTML = "";
-    label.textContent = monthLabel(cur.getFullYear(), cur.getMonth());
 
-    // Шапка дней недели (Пн–Вс)
+    const weekStart = new Date(cur);
+    const weekEnd = new Date(cur); weekEnd.setDate(weekEnd.getDate() + 6);
+
+    // метка: "12–18 окт 2025" (или "30 сен – 6 окт 2025", если месяц разный)
+    const sameMonth = weekStart.getMonth() === weekEnd.getMonth();
+    const sameYear  = weekStart.getFullYear() === weekEnd.getFullYear();
+    let text = `${weekStart.getDate()}–${weekEnd.getDate()} `;
+    if (sameMonth) {
+      text += `${shortMonth(weekEnd.getMonth())} ${weekEnd.getFullYear()}`;
+    } else if (sameYear) {
+      text += `${shortMonth(weekStart.getMonth())}–${shortMonth(weekEnd.getMonth())} ${weekEnd.getFullYear()}`;
+    } else {
+      text += `${shortMonth(weekStart.getMonth())} ${weekStart.getFullYear()} – ${shortMonth(weekEnd.getMonth())} ${weekEnd.getFullYear()}`;
+    }
+    label.textContent = text;
+
+    // шапка дней недели
     const dayNames = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
     dayNames.forEach(n => {
       const el = document.createElement("div");
@@ -101,59 +130,44 @@ function renderCalendar(items, today){
       grid.appendChild(el);
     });
 
-    const first = new Date(cur.getFullYear(), cur.getMonth(), 1);
-    const daysInMonth = new Date(cur.getFullYear(), cur.getMonth()+1, 0).getDate();
-    const lead = (first.getDay()+6)%7; // 0=Пн
+    // 7 ячеек на неделю
+    for (let i = 0; i < 7; i++) {
+      const cellDate = new Date(weekStart); cellDate.setDate(weekStart.getDate() + i);
 
-    // Пустые ячейки до 1-го числа
-    for (let i = 0; i < lead; i++) {
-      const blank = document.createElement("div");
-      blank.className = "day";
-      blank.style.visibility = "hidden";
-      grid.appendChild(blank);
-    }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const cellDate = new Date(cur.getFullYear(), cur.getMonth(), d);
       const cell = document.createElement("div");
       cell.className = "day";
       if (sameYMD(cellDate, today)) cell.classList.add("today");
 
       const num = document.createElement("div");
       num.className = "date-num";
-      num.textContent = d;
+      num.textContent = cellDate.getDate();
       cell.appendChild(num);
 
-      // события этого дня
       const todays = items.filter(it => sameYMD(it._date, cellDate));
 
-      // контейнер для компактных бейджей (абсолютно снизу)
-      const badges = document.createElement("div");
-      badges.className = "events";
-      cell.appendChild(badges);
+      // список событий внизу ячейки, не растягивает высоту
+      const list = document.createElement("div");
+      list.className = "events";
+      cell.appendChild(list);
 
       todays.forEach(it => {
         const diff = DIFF_CLASS[it.difficulty] ?? "medium";
-
-        // короткое сокращение: берём it.abbr, иначе первые 3 буквы предмета
-        const abbr = (it.abbr || it.subject || "DL")
-          .replace(/[ёЁ]/g, "е").trim().slice(0,3).toUpperCase();
-
-        const badge = document.createElement("span");
-        badge.className = `event-badge ${diff}`;
-        // полный текст во всплывающей подсказке
         const full = `${it.subject ? it.subject + ": " : ""}${it.title || ""}`.trim();
-        badge.setAttribute("data-tip", full);
-        badge.title = full; // запасной вариант для мобилок
-        badge.innerHTML = `<span class="dot ${diff}"></span>${abbr}`;
 
-        // клик по бейджу — открыть ссылку (если есть)
-        badge.addEventListener("click", (e) => {
+        // показываем ТОЛЬКО предмет; при наведении всплывает крупный бейдж
+        const row = document.createElement("div");
+        row.className = "ev-subj";
+        row.setAttribute("data-tip", full);
+        row.title = full; // запасной тултип
+        row.innerHTML = `<span class="dot ${diff}"></span>${it.subject || "Задача"}`;
+
+        // клик откроет ссылку (если есть)
+        row.addEventListener("click", (e) => {
           e.stopPropagation();
           if (it.url) window.open(it.url, "_blank", "noopener");
         });
 
-        badges.appendChild(badge);
+        list.appendChild(row);
       });
 
       grid.appendChild(cell);
@@ -161,8 +175,10 @@ function renderCalendar(items, today){
   }
 
   draw();
-  prevBtn?.addEventListener("click", ()=>{ cur = new Date(cur.getFullYear(), cur.getMonth()-1, 1); draw(); });
-  nextBtn?.addEventListener("click", ()=>{ cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1); draw(); });
+
+  // перелистывание по неделям
+  prevBtn?.addEventListener("click", ()=>{ cur.setDate(cur.getDate() - 7); draw(); });
+  nextBtn?.addEventListener("click", ()=>{ cur.setDate(cur.getDate() + 7); draw(); });
 }
 
 

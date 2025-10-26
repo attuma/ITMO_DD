@@ -112,6 +112,60 @@ a:hover{text-decoration:underline}
   padding: .4rem .6rem; white-space: nowrap; z-index: 10;
   box-shadow: 0 10px 25px rgba(0,0,0,.35);
 }
+/* Неделя: 7 колонок, на мобиле — горизонтальная прокрутка */
+.calendar-grid{
+  display: grid;
+  grid-template-columns: repeat(7, minmax(120px, 1fr));
+  gap: .5rem;
+  overflow-x: auto;           /* если экран узкий — скроллится */
+  padding-bottom: .25rem;     /* чтобы не обрезало тени тултипов */
+  min-width: 720px;           /* держим читаемость на телефоне, даём горизонтальный скролл */
+}
+
+.day { position: relative; min-height: 140px; } /* фиксированная высота, ряды не тянутся */
+@media (max-width: 720px){
+  .day { min-height: 120px; }
+}
+
+/* список событий у нижней границы, вертикальная колонка */
+.events{
+  position: absolute; left: .35rem; right: .35rem; bottom: .35rem;
+  display: flex; flex-direction: column; gap: .25rem;
+}
+
+/* строка-событие: только предмет + точка сложности; одна строка, обрезка троеточием */
+.ev-subj{
+  position: relative;
+  display: inline-flex; align-items: center; gap: .35rem;
+  max-width: 100%;
+  font-size: .9rem;           /* крупнее, чем раньше */
+  line-height: 1.1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  cursor: default;
+}
+
+.ev-subj .dot{               /* увеличим маркер */
+  width: .6rem; height: .6rem; border-radius: 50%;
+  border: 1px solid var(--border);
+}
+.dot.easy{background:var(--easy)}
+.dot.medium{background:var(--medium)}
+.dot.hard{background:var(--hard)}
+.dot.exam{background:var(--exam)}
+
+/* крупный бейдж-подсказка при наведении */
+.ev-subj[data-tip]:hover::after{
+  content: attr(data-tip);
+  position: absolute; left: 0; bottom: 125%;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: .8rem;
+  padding: .55rem .75rem;             /* чуть больше */
+  font-size: .95rem;                  /* крупнее бейдж */
+  white-space: nowrap; z-index: 20;
+  box-shadow: 0 12px 28px rgba(0,0,0,.4);
+}
+
 
 
 
