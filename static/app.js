@@ -81,8 +81,8 @@ function monthLabel(year, month){
 }
 
 function renderCalendar(items, today){
-  const label = document.getElementById("month-label");
-  const grid = document.getElementById("calendar-grid");
+  const label  = document.getElementById("month-label");
+  const grid   = document.getElementById("calendar-grid");
   const prevBtn = document.getElementById("prev-month");
   const nextBtn = document.getElementById("next-month");
 
@@ -92,7 +92,7 @@ function renderCalendar(items, today){
     grid.innerHTML = "";
     label.textContent = monthLabel(cur.getFullYear(), cur.getMonth());
 
-    // Заголовок дней недели (с понедельника)
+    // Шапка дней недели (Пн–Вс)
     const dayNames = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
     dayNames.forEach(n => {
       const el = document.createElement("div");
@@ -105,36 +105,55 @@ function renderCalendar(items, today){
     const daysInMonth = new Date(cur.getFullYear(), cur.getMonth()+1, 0).getDate();
     const lead = (first.getDay()+6)%7; // 0=Пн
 
-    // Пустые ячейки до первого
-    for(let i=0;i<lead;i++){
+    // Пустые ячейки до 1-го числа
+    for (let i = 0; i < lead; i++) {
       const blank = document.createElement("div");
       blank.className = "day";
       blank.style.visibility = "hidden";
       grid.appendChild(blank);
     }
 
-    for(let d=1; d<=daysInMonth; d++){
+    for (let d = 1; d <= daysInMonth; d++) {
       const cellDate = new Date(cur.getFullYear(), cur.getMonth(), d);
       const cell = document.createElement("div");
       cell.className = "day";
-      if(sameYMD(cellDate, today)) cell.classList.add("today");
+      if (sameYMD(cellDate, today)) cell.classList.add("today");
 
       const num = document.createElement("div");
       num.className = "date-num";
       num.textContent = d;
       cell.appendChild(num);
 
+      // события этого дня
       const todays = items.filter(it => sameYMD(it._date, cellDate));
+
+      // контейнер для компактных бейджей (абсолютно снизу)
+      const badges = document.createElement("div");
+      badges.className = "events";
+      cell.appendChild(badges);
+
       todays.forEach(it => {
         const diff = DIFF_CLASS[it.difficulty] ?? "medium";
-        const ev = document.createElement("div");
-        ev.className = `event ${diff}`;
-        ev.title = `${it.subject}: ${it.title}`;
-        ev.innerHTML = `<span class="dot ${diff}"></span>${it.subject} — ${it.title}`;
-        ev.addEventListener("click", () => {
-          if(it.url) window.open(it.url, "_blank", "noopener");
+
+        // короткое сокращение: берём it.abbr, иначе первые 3 буквы предмета
+        const abbr = (it.abbr || it.subject || "DL")
+          .replace(/[ёЁ]/g, "е").trim().slice(0,3).toUpperCase();
+
+        const badge = document.createElement("span");
+        badge.className = `event-badge ${diff}`;
+        // полный текст во всплывающей подсказке
+        const full = `${it.subject ? it.subject + ": " : ""}${it.title || ""}`.trim();
+        badge.setAttribute("data-tip", full);
+        badge.title = full; // запасной вариант для мобилок
+        badge.innerHTML = `<span class="dot ${diff}"></span>${abbr}`;
+
+        // клик по бейджу — открыть ссылку (если есть)
+        badge.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (it.url) window.open(it.url, "_blank", "noopener");
         });
-        cell.appendChild(ev);
+
+        badges.appendChild(badge);
       });
 
       grid.appendChild(cell);
@@ -142,15 +161,10 @@ function renderCalendar(items, today){
   }
 
   draw();
-  prevBtn?.addEventListener("click", ()=>{
-    cur = new Date(cur.getFullYear(), cur.getMonth()-1, 1);
-    draw();
-  });
-  nextBtn?.addEventListener("click", ()=>{
-    cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1);
-    draw();
-  });
+  prevBtn?.addEventListener("click", ()=>{ cur = new Date(cur.getFullYear(), cur.getMonth()-1, 1); draw(); });
+  nextBtn?.addEventListener("click", ()=>{ cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1); draw(); });
 }
+
 
 async function bootstrap(){
   const page = document.body.getAttribute("data-page") || "index";

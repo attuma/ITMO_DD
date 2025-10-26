@@ -80,4 +80,38 @@ a:hover{text-decoration:underline}
 .markdown ul { margin: .4rem 0 .8rem 1.25rem; }
 .markdown li { margin: .25rem 0; }
 .markdown a:hover { text-decoration: underline; }
+.day { position: relative; }
+.events {
+  position: absolute; left: .35rem; right: .35rem; bottom: .35rem;
+  display: flex; gap: .25rem; flex-wrap: wrap;
+}
+.event-badge {
+  position: relative;
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .12rem .42rem; border-radius: 999px;
+  font-size: .72rem; line-height: 1; cursor: default;
+  border: 1px solid var(--border);
+}
+.event-badge .dot {
+  width: .45rem; height: .45rem; border-radius: 50%;
+  border: 1px solid var(--border);
+}
+.event-badge.easy   { background: color-mix(in srgb, var(--easy)   20%, transparent); }
+.event-badge.medium { background: color-mix(in srgb, var(--medium) 20%, transparent); }
+.event-badge.hard   { background: color-mix(in srgb, var(--hard)   20%, transparent); }
+.event-badge.exam   { background: color-mix(in srgb, var(--exam)   20%, transparent); }
+.dot.easy{background:var(--easy)} .dot.medium{background:var(--medium)}
+.dot.hard{background:var(--hard)} .dot.exam{background:var(--exam)}
+
+/* всплывающая подсказка */
+.event-badge[data-tip]:hover::after{
+  content: attr(data-tip);
+  position: absolute; left: 0; bottom: 120%;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--border); border-radius: .6rem;
+  padding: .4rem .6rem; white-space: nowrap; z-index: 10;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+
+
 
