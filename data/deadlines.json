@@ -1,16 +1,16 @@
 [
   {
     "subject":"Физика",
-    "title":"Lab2",
+    "title":"Лаб2",
     "date":"2025-10-28",
     "difficulty":"medium",
     "url":""
   },
   {
-    "subject":"Физика",
-    "title":"КР",
+    "subject":"ИСИТ",
+    "title":"ТЗ по КП",
     "date":"2025-10-28",
-    "difficulty":"hard",
+    "difficulty":"medium",
     "url":""
   },
   {
@@ -21,10 +21,31 @@
     "url":""
   },
   {
+    "subject":"БД",
+    "title":"Защита лаб1",
+    "date":"2025-11-05",
+    "difficulty":"medium",
+    "url":""
+  },
+  {
     "subject":"Матан",
     "title":"Академ",
     "date":"2025-11-07",
     "difficulty":"easy",
+    "url":""
+  },
+  {
+    "subject":"Числа",
+    "title":"Лаб1",
+    "date":"2025-11-10",
+    "difficulty":"hard",
+    "url":""
+  },
+  {
+    "subject":"Облака",
+    "title":"Лабы",
+    "date":"2025-11-10",
+    "difficulty":"medium",
     "url":""
   },
   {
