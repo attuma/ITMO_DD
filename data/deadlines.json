@@ -1,5 +1,12 @@
 [
   {
+    "subject":"Дизайн",
+    "title":"Правки Лаб2",
+    "date":"2025-10-03",
+    "difficulty":"easy",
+    "url":""
+  },
+  {
     "subject":"Физика",
     "title":"Лаб2",
     "date":"2025-10-28",
@@ -10,6 +17,13 @@
     "subject":"ИСИТ",
     "title":"ТЗ по КП",
     "date":"2025-10-28",
+    "difficulty":"medium",
+    "url":""
+  },
+  {
+    "subject":"Дизайн",
+    "title":"Лаб3",
+    "date":"2025-10-31",
     "difficulty":"medium",
     "url":""
   },
