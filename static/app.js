@@ -113,11 +113,15 @@ function renderIndex(items, today) {
         ? ` · <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`
         : "";
       const li = document.createElement("li");
-      li.innerHTML = `<span class="dot ${diff}"></span><strong>${fmtDate(
-        it._date
-      )}</strong> — <span class="badge tag-${diff}">${it.subject}</span> ${shortenTitle(
-        it.title
-      )} <span class="muted">(${it._daysLeft} дн.)</span>${linkHTML}`;
+      li.innerHTML = `
+        <span class="dot ${diff}"></span>
+        <span class="deadline-content">
+          <strong>${fmtDate(it._date)}</strong> —
+          <span class="badge tag-${diff}">${it.subject}</span>
+          ${shortenTitle(it.title)}
+          <span class="muted">(${it._daysLeft} дн.)</span>${linkHTML}
+        </span>
+      `;
       upList.appendChild(li);
     });
   }
