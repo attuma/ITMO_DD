@@ -106,7 +106,7 @@ function renderIndex(items, today) {
     const future = items.filter((it) => it._date >= today);
     if (future.length === 0 && upEmpty) upEmpty.style.display = "block";
 
-    future.slice(0, 7).forEach((it) => {
+    future.slice(0, 4).forEach((it) => {
       const diff = it.difficulty ?? "medium";
       const linkHTML = it.url
         ? ` · <a href="${it.url}" target="_blank" rel="noopener">ссылка</a>`
