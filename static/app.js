@@ -1,4 +1,3 @@
-// Лёгкая логика без сборки. Всё работает на GitHub/Cloudflare Pages.
 // Автоинкремент версий при каждом коммите
 const DATA_URL = "data/deadlines.json";
 
