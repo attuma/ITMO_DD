@@ -40,6 +40,30 @@ a:hover{text-decoration:underline}
   background: var(--brand);
 }
 
+/* hover эффект для всех ссылок */
+.brand:hover,
+.nav-links a:hover{
+  color: var(--text);
+  text-decoration: none;
+}
+
+.brand:hover::after,
+.nav-links a:hover::after{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--brand);
+}
+
+/* скрыть выделение активной страницы при hover на любую ссылку */
+nav:has(a:hover) .brand[aria-current="page"]::after,
+nav:has(a:hover) .nav-links a[aria-current="page"]::after{
+  display: none;
+}
+
 .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1rem;margin:1rem 0}
 .footer{padding:2rem 1rem 3rem}
 .muted{color:var(--muted)}
