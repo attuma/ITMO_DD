@@ -35,13 +35,6 @@
     "url":""
   },
   {
-    "subject":"БД",
-    "title":"Защита лаб1",
-    "date":"2025-11-05",
-    "difficulty":"medium",
-    "url":""
-  },
-  {
     "subject":"Матан",
     "title":"Академ",
     "date":"2025-11-07",
@@ -67,6 +60,34 @@
     "title":"Рубежка",
     "date":"2025-11-11",
     "difficulty":"exam",
+    "url":""
+  },
+  {
+    "subject":"БД",
+    "title":"Защита лаб1",
+    "date":"2025-11-12",
+    "difficulty":"medium",
+    "url":""
+  },
+  {
+    "subject":"БД",
+    "title":"Лаб 2",
+    "date":"2025-11-20",
+    "difficulty":"hard",
+    "url":""
+  },
+  {
+    "subject":"ООП",
+    "title":"Лабы",
+    "date":"2025-11-30",
+    "difficulty":"hard",
+    "url":""
+  },
+  {
+    "subject":"Физика ",
+    "title":"Лабы и дз",
+    "date":"2025-12-25",
+    "difficulty":"medium",
     "url":""
   }
 ]
