@@ -70,6 +70,13 @@
     "url":""
   },
   {
+    "subject":"ООП",
+    "title":"Тест ",
+    "date":"2025-11-12",
+    "difficulty":"medium",
+    "url":""
+  },
+  {
     "subject":"БД",
     "title":"Лаб 2",
     "date":"2025-11-20",
