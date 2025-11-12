@@ -42,13 +42,6 @@
     "url":""
   },
   {
-    "subject":"Числа",
-    "title":"Лаб1",
-    "date":"2025-11-10",
-    "difficulty":"hard",
-    "url":""
-  },
-  {
     "subject":"Облака",
     "title":"Лабы",
     "date":"2025-11-10",
@@ -63,13 +56,6 @@
     "url":""
   },
   {
-    "subject":"БД",
-    "title":"Защита лаб1",
-    "date":"2025-11-12",
-    "difficulty":"medium",
-    "url":""
-  },
-  {
     "subject":"ООП",
     "title":"Тест ",
     "date":"2025-11-12",
@@ -77,10 +63,24 @@
     "url":""
   },
   {
+    "subject":"Числа",
+    "title":"Лаб1",
+    "date":"2025-11-17",
+    "difficulty":"hard",
+    "url":""
+  },
+  {
     "subject":"БД",
     "title":"Лаб 2",
     "date":"2025-11-20",
     "difficulty":"hard",
+    "url":""
+  },
+  {
+    "subject":"БД",
+    "title":"Защита лаб1",
+    "date":"2025-11-26",
+    "difficulty":"medium",
     "url":""
   },
   {
