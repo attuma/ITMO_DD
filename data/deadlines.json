@@ -91,6 +91,27 @@
     "url":""
   },
   {
+    "subject":"Теорвер",
+    "title":"Кр + тест",
+    "date":"2025-12-01",
+    "difficulty":"exam",
+    "url":""
+  },
+  {
+    "subject":"Теорвер",
+    "title":"РГР",
+    "date":"2025-12-08",
+    "difficulty":"easy",
+    "url":""
+  },
+  {
+    "subject":"Теорвер",
+    "title":"Сдать долги",
+    "date":"2025-12-15",
+    "difficulty":"easy",
+    "url":""
+  },
+  {
     "subject":"Физика ",
     "title":"Лабы и дз",
     "date":"2025-12-25",
